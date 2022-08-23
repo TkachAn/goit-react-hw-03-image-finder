@@ -1,15 +1,24 @@
-<header class="searchbar">
-  <form class="form">
-    <button type="submit" class="button">
-      <span class="button-label">Search</span>
-    </button>
+import css from './Searchbar.module.css';
 
-    <input
-      class="input"
-      type="text"
-      autocomplete="off"
-      autofocus
-      placeholder="Search images and photos"
-    />
-  </form>
-</header>;
+function Searchbar({ onHandleSubmit, onSearchQueryChange, value }) {
+  return (
+    <header className={css.searchbar}>
+      <form className={css.form}>
+        <button type="submit" className={css.button} onClick={onHandleSubmit}>
+          <span className="button-label">Search</span>
+        </button>
+        <input
+          className={css.input}
+          type="text"
+          autocomplete="off"
+          autofocus
+          placeholder="Search images and photos"
+          value={value}
+          onChange={onSearchQueryChange}
+        />
+      </form>
+    </header>
+  );
+}
+
+export default Searchbar;
