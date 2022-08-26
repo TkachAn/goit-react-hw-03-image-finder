@@ -16,5 +16,13 @@ const apiPixabay = async (query, page) => {
   });
   return data.hits;
 };
-
+export const apiIdPixabay = async id => {
+  const { data } = await axios.get('', {
+    params: {
+      key: KEY,
+      id: id,
+    },
+  });
+  return data.hits.userImageURL;
+};
 export default apiPixabay;
