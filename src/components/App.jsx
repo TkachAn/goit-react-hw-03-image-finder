@@ -1,15 +1,12 @@
 import { Component } from 'react';
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
 import apiPixabay from '../apiPixabay/apiPixabay';
-// import Container from './components/Container';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
-// import Loader_ from './Loader/Loader';
+import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
 import ErrorView from './ErrorView/ErrorView';
-
+import PreLoad from './preLoad/preLoad';
 class App extends Component {
   state = {
     query: '',
@@ -29,13 +26,10 @@ class App extends Component {
 
   searchImages = async () => {
     const { query, page } = this.state;
-
+    this.setState({ isLoading: true });
     if (query.trim() === '') {
-      return; //toast.info('Please enter a value for search images!');
+      return <p>введите запрос!!!!!!!!!!!!</p>; //toast.info('Please enter a value for search images!');
     }
-
-    // this.toggleLoader();
-
     try {
       const request = await apiPixabay(query, page);
       this.setState(({ images, page }) => ({
@@ -48,7 +42,7 @@ class App extends Component {
     } catch (error) {
       this.setState({ error: 'Something went wrong. Try again.' });
     } finally {
-      <p>qq</p>; // this.toggleLoader();
+      this.setState({ isLoading: false });
     }
   };
 
@@ -69,12 +63,6 @@ class App extends Component {
   onOpenModal = e => {
     this.setState({ largeImageURL: e.target.dataset.source });
     this.toggleModal();
-  };
-
-  toggleLoader = () => {
-    this.setState(({ isLoading }) => ({
-      isLoading: !isLoading,
-    }));
   };
 
   toggleModal = () => {
@@ -109,7 +97,7 @@ class App extends Component {
           <ImageGallery images={images} onOpenModal={this.onOpenModal} />
         )}
 
-        {isLoading && <p>загрузка...</p>}
+        {isLoading && <Loader />}
 
         {!isLoading && images.length >= 12 && !error && (
           <Button onLoadMore={this.onLoadMore} />
@@ -121,15 +109,20 @@ class App extends Component {
             largeImageURL={largeImageURL}
           />
         )}
-        {!query && <p>введите запрос!</p>}
+        {!query && (
+          <>
+            <h2>'Please enter a value for search images!'</h2>
+            <PreLoad id="2649311" />
+          </>
+        )}
       </div>
     );
   }
 }
 
 export default App;
-//ToastContainer autoClose={3700}
-//<Loader_ />}
+//ToastContainer autoClose={3700}<p>загрузка...</p>
+//<Loader />}
 
 // export const App = () => {
 //   state = {
