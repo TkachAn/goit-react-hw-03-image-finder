@@ -1,4 +1,9 @@
+.button {
+  text-align: center;
+}
 .btn {
+  margin: 20px 0;
+
   padding: 8px 16px;
   border-radius: 2px;
   background-color: #3f51b5;
