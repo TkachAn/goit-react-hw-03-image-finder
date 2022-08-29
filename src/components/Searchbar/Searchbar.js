@@ -3,9 +3,9 @@ import css from './Searchbar.module.css';
 
 function Searchbar({ onHandleSubmit, onSearchQueryChange, value }) {
   return (
-    <header className={css.header}>
+    <header className={css.Searchbar}>
       <form className={css.form} onSubmit={onHandleSubmit}>
-        <button type="submit" className={css.btn}>
+        <button type="submit" className={css.button}>
           <span className={css.label}>Search</span>
         </button>
 
