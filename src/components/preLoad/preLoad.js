@@ -1,14 +1,12 @@
-// import { apiIdPixabay } from '../../apiPixabay/apiPixabay';
-function PreLoad() {
-  // const { id } = this.state;
-  // const largeImageURL = apiIdPixabay.get(id);
+import css from './preLoad.module.css';
 
+function PreLoad({ src, alt = 'fingers up' }) {
   return (
-    <div className="gg">
-      <img src="../img/finger.jpg" alt="hh" />
-      <h2>'Please enter a value for search images!'</h2>
+    <div className={css.tumb}>
+      <h2 className={css.text}>'Please enter a value for search images!'</h2>
+      <img className={css.image} src={src} alt={alt} />
     </div>
   );
 }
+
 export default PreLoad;
-//{css.modal}>
