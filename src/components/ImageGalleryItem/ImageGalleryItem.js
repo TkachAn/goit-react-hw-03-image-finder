@@ -1,10 +1,17 @@
 import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({ webformatURL, largeImageURL, tags, onOpenModal }) {
+function ImageGalleryItem({
+  webformatURL,
+  largeImageURL,
+  tags,
+  onOpenModal,
+  id,
+}) {
   return (
     <li className={css.item}>
       <img
+        id={id}
         src={webformatURL}
         alt={tags}
         data-source={largeImageURL}
