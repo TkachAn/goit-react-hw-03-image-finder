@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import apiPixabay from '../apiPixabay/apiPixabay';
+import { apiPixabay, apiIdPixabay } from '../apiPixabay/apiPixabay';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
@@ -12,11 +12,18 @@ class App extends Component {
     query: '',
     images: [],
     largeImageURL: '',
+    startImageURL: '',
     page: 1,
     error: null,
     isLoading: false,
     showModal: false,
+    status: 'idle',
+    a: '',
   };
+
+  componentDidMount() {
+    this.findImages();
+  }
 
   componentDidUpdate(_prevProps, prevState) {
     if (prevState.query !== this.state.query) {
@@ -26,18 +33,38 @@ class App extends Component {
 
   searchImages = async () => {
     const { query, page } = this.state;
-    this.setState({ isLoading: true });
-    if (query.trim() === '') {
-      return <p>введите запрос!!!!!!!!!!!!</p>; //toast.info('Please enter a value for search images!');
-    }
+    this.setState({ status: 'pending' });
     try {
       const request = await apiPixabay(query, page);
       this.setState(({ images, page }) => ({
         images: [...images, ...request],
         page: page + 1,
+        status: 'resolved',
       }));
       if (request.length === 0) {
-        this.setState({ error: `No results were found for ${query}!` });
+        this.setState({
+          error: `No results were found for ${query}!`,
+          status: 'rejected ',
+        });
+      }
+    } catch (error) {
+      this.setState({ error: 'Something went wrong. Try again.' });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
+  findImages = async () => {
+    try {
+      const request = await apiIdPixabay();
+      this.setState(() => ({
+        startImageURL: request[0].largeImageURL,
+      }));
+      if (request.length === 0) {
+        this.setState({
+          error: `No results were found!`,
+          status: 'rejected ',
+        });
       }
     } catch (error) {
       this.setState({ error: 'Something went wrong. Try again.' });
@@ -62,6 +89,8 @@ class App extends Component {
 
   onOpenModal = e => {
     this.setState({ largeImageURL: e.target.dataset.source });
+    console.log('log', e.target.dataset.source);
+
     this.toggleModal();
   };
 
@@ -81,54 +110,54 @@ class App extends Component {
   };
 
   render() {
-    const { query, images, largeImageURL, isLoading, showModal, error } =
-      this.state;
-    return (
-      <div>
-        <Searchbar
-          onHandleSubmit={this.handleSubmit}
-          onSearchQueryChange={this.handleChange}
-          value={query}
-        />
+    const {
+      query,
+      images,
+      largeImageURL,
+      startImageURL,
+      isLoading,
+      showModal,
+      error,
+      status,
+    } = this.state;
 
-        {error && <ErrorView texterror={error} />}
-
-        {images.length > 0 && !error && (
-          <ImageGallery images={images} onOpenModal={this.onOpenModal} />
-        )}
-
-        {isLoading && <Loader />}
-
-        {!isLoading && images.length >= 12 && !error && (
-          <Button onLoadMore={this.onLoadMore} />
-        )}
-
-        {showModal && (
-          <Modal
-            onToggleModal={this.toggleModal}
-            largeImageURL={largeImageURL}
+    if (status === 'idle') {
+      if (isLoading === false) {
+        console.log('startImageURL', startImageURL);
+      }
+      return (
+        <>
+          <Searchbar
+            onHandleSubmit={this.handleSubmit}
+            onSearchQueryChange={this.handleChange}
+            value={query}
           />
-        )}
-        {!query && (
-          <>
-            <h2>'Please enter a value for search images!'</h2>
-            <PreLoad id="2649311" />
-          </>
-        )}
-      </div>
-    );
+          <PreLoad src={startImageURL} />
+        </>
+      );
+    }
+    if (status === 'pending') {
+      return <Loader />;
+    }
+
+    if (status === 'rejected') {
+      return <ErrorView texterror={error} />;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <>
+          <Searchbar
+            onHandleSubmit={this.handleSubmit}
+            onSearchQueryChange={this.handleChange}
+            value={query}
+          />
+          <ImageGallery images={images} onOpenModal={this.onOpenModal} />
+          {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
+        </>
+      );
+    }
   }
 }
 
 export default App;
-//ToastContainer autoClose={3700}<p>загрузка...</p>
-//<Loader />}
-
-// export const App = () => {
-//   state = {
-//     images: [],
-//     largeImageURL: '',
-//     query: '',
-//   };
-//   return <div>React homework template</div>;
-// };
