@@ -4,7 +4,7 @@ import css from './ImageGallery.module.css';
 
 function ImageGallery({ images, onOpenModal }) {
   return (
-    <ul className={css.list}>
+    <ul className={css.ImageGallery}>
       {images.map(({ id, webformatURL, largeImageURL, tags }) => (
         <ImageGalleryItem
           key={id}
