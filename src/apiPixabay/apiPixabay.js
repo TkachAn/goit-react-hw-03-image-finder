@@ -15,11 +15,11 @@ export const apiPixabay = async (query, page) => {
   });
   return data.hits;
 };
-export const apiIdPixabay = async () => {
+export const apiPixabayId = async id => {
   const { data } = await axios.get('', {
     params: {
       key: API_KEY,
-      id: '2649311',
+      id: id,
     },
   });
   // console.log(data.hits);
