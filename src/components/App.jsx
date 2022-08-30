@@ -132,7 +132,18 @@ class App extends Component {
     }
 
     if (status === 'pending') {
-      return <Loader />;
+      return (
+        <>
+          <Searchbar
+            onHandleSubmit={this.handleSubmit}
+            onSearchQueryChange={this.handleChange}
+            value={query}
+          />
+          <ImageGallery images={images} onOpenModal={this.onOpenModal} />
+          <Loader />
+          {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
+        </>
+      );
     }
 
     if (status === 'rejected') {
