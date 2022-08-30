@@ -24,7 +24,3 @@ ImageGallery.propTypes = {
 };
 
 export default ImageGallery;
-
-/* <ul class="gallery">
-  <li> с изображениями </li>
-</ul>; */
