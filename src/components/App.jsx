@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { apiPixabay, apiIdPixabay } from '../apiPixabay/apiPixabay';
+import { apiPixabay, apiPixabayId } from '../apiPixabay/apiPixabay';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
@@ -15,14 +15,12 @@ class App extends Component {
     startImageURL: '',
     page: 1,
     error: null,
-    isLoading: false,
     showModal: false,
     status: 'idle',
-    a: '',
   };
 
   componentDidMount() {
-    this.findImages();
+    this.findImageId('2649311'); //3082831//2649311
   }
 
   componentDidUpdate(_prevProps, prevState) {
@@ -41,40 +39,42 @@ class App extends Component {
         page: page + 1,
         status: 'resolved',
       }));
-      if (request.length === 0) {
+      if (request.length === 0 || request === '') {
         this.setState({
           error: `No results were found for ${query}!`,
-          status: 'rejected ',
+          status: 'rejected',
         });
+        this.findImageId('3082831');
       }
     } catch (error) {
       this.setState({ error: 'Something went wrong. Try again.' });
     } finally {
-      this.setState({ isLoading: false });
+      // this.setState({ isLoading: false });
     }
   };
 
-  findImages = async () => {
+  findImageId = async id => {
     try {
-      const request = await apiIdPixabay();
+      const request = await apiPixabayId(id);
       this.setState(() => ({
         startImageURL: request[0].largeImageURL,
       }));
       if (request.length === 0) {
         this.setState({
-          error: `No results were found!`,
+          error: `No results were found for ${id}!`,
           status: 'rejected ',
         });
       }
     } catch (error) {
       this.setState({ error: 'Something went wrong. Try again.' });
     } finally {
-      this.setState({ isLoading: false });
+      // this.setState({ isLoading: false });
     }
   };
 
   handleChange = e => {
     this.setState({ query: e.target.value });
+    console.log(e.target.value);
   };
 
   handleSubmit = e => {
@@ -89,24 +89,22 @@ class App extends Component {
 
   onOpenModal = e => {
     this.setState({ largeImageURL: e.target.dataset.source });
-    console.log('log', e.target.dataset.source);
-
     this.toggleModal();
   };
 
   toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
+    this.setState(state => ({
+      showModal: !state.showModal,
     }));
   };
 
   scrollPage = () => {
     setTimeout(() => {
       window.scrollBy({
-        top: document.documentElement.clientHeight - 160,
+        top: document.documentElement.clientHeight + 560,
         behavior: 'smooth',
       });
-    }, 1000);
+    }, 800);
   };
 
   render() {
@@ -115,16 +113,12 @@ class App extends Component {
       images,
       largeImageURL,
       startImageURL,
-      isLoading,
       showModal,
       error,
       status,
     } = this.state;
 
     if (status === 'idle') {
-      if (isLoading === false) {
-        console.log('startImageURL', startImageURL);
-      }
       return (
         <>
           <Searchbar
@@ -136,12 +130,22 @@ class App extends Component {
         </>
       );
     }
+
     if (status === 'pending') {
       return <Loader />;
     }
 
     if (status === 'rejected') {
-      return <ErrorView texterror={error} />;
+      return (
+        <>
+          <Searchbar
+            onHandleSubmit={this.handleSubmit}
+            onSearchQueryChange={this.handleChange}
+            value={query}
+          />
+          <ErrorView texterror={error} src={startImageURL} />
+        </>
+      );
     }
 
     if (status === 'resolved') {
@@ -154,6 +158,13 @@ class App extends Component {
           />
           <ImageGallery images={images} onOpenModal={this.onOpenModal} />
           {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
+
+          {showModal && (
+            <Modal
+              largeImageURL={largeImageURL}
+              onToggleModal={this.toggleModal}
+            />
+          )}
         </>
       );
     }
