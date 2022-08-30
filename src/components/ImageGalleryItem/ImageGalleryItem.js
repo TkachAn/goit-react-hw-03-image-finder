@@ -1,17 +1,10 @@
 import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({
-  webformatURL,
-  largeImageURL,
-  tags,
-  onOpenModal,
-  id,
-}) {
+function ImageGalleryItem({ webformatURL, largeImageURL, tags, onOpenModal }) {
   return (
     <li className={css.item}>
       <img
-        id={id}
         src={webformatURL}
         alt={tags}
         data-source={largeImageURL}
@@ -29,7 +22,3 @@ ImageGalleryItem.propTypes = {
 };
 
 export default ImageGalleryItem;
-
-/* <li class="gallery-item">
-  <img src="" alt="" />
-</li>; */
