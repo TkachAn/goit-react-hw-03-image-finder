@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import errorImage from './oops.jpg';
+
 import css from './ErrorView.module.css';
 
-function ErrorView({ texterror, src = errorImage }) {
+function ErrorView({ texterror, src }) {
   return (
     <div role="alert" className={css.wrapper}>
       <h2 text={texterror} className={css.text}>
