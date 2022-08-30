@@ -5,13 +5,13 @@ function Loader() {
   return (
     <div className={css.overlay}>
       <ThreeDots
-        height="80"
-        width="80"
+        height="100"
+        width="100"
         radius="9"
         color="#4fa94d"
         ariaLabel="three-dots-loading"
         wrapperStyle={{}}
-        wrapperClassName=""
+        wrapperClassName={css.wrap}
         visible={true}
       />
     </div>
