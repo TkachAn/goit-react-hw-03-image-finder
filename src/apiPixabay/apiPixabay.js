@@ -15,6 +15,7 @@ export const apiPixabay = async (query, page) => {
   });
   return data.hits;
 };
+
 export const apiPixabayId = async id => {
   const { data } = await axios.get('', {
     params: {
@@ -22,6 +23,5 @@ export const apiPixabayId = async id => {
       id: id,
     },
   });
-  // console.log(data.hits);
   return data.hits;
 };
