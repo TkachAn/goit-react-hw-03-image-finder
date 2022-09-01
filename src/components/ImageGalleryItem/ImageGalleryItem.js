@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
-function ImageGalleryItem({ webformatURL, largeImageURL, tags, onOpenModal }) {
+function ImageGalleryItem({
+  id,
+  webformatURL,
+  largeImageURL,
+  tags,
+  onOpenModal,
+}) {
   return (
-    <li className={css.item}>
+    <li key={id} className={css.item}>
       <img
         src={webformatURL}
         alt={tags}
@@ -19,6 +25,7 @@ ImageGalleryItem.propTypes = {
   largeImageURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
   webformatURL: PropTypes.string.isRequired,
+  onOpenModal: PropTypes.func.isRequired,
 };
 
 export default ImageGalleryItem;
