@@ -27,6 +27,9 @@ class App extends Component {
     if (prevState.query !== this.state.query) {
       this.setState({ images: [], page: 1, error: null });
     }
+    if (this.status === 'pending') {
+      console.log(this.status); // this.setState({ page: this.state.page + 1 });
+    }
   }
 
   searchImages = async () => {
@@ -34,9 +37,10 @@ class App extends Component {
     this.setState({ status: 'pending' });
     try {
       const request = await apiPixabay(query, page);
-      this.setState(({ images, page }) => ({
+      this.onLoadMore();
+      this.scrollPage();
+      this.setState(({ images }) => ({
         images: [...images, ...request],
-        page: page + 1,
         status: 'resolved',
       }));
       if (request.length === 0 || request === '') {
@@ -49,7 +53,6 @@ class App extends Component {
     } catch (error) {
       this.setState({ error: 'Something went wrong. Try again.' });
     } finally {
-      // this.setState({ isLoading: false });
     }
   };
 
@@ -74,7 +77,6 @@ class App extends Component {
 
   handleChange = e => {
     this.setState({ query: e.target.value });
-    console.log(e.target.value);
   };
 
   handleSubmit = e => {
@@ -83,8 +85,9 @@ class App extends Component {
   };
 
   onLoadMore = () => {
-    this.searchImages();
-    this.scrollPage();
+    this.setState(({ page }) => ({
+      page: page + 1,
+    }));
   };
 
   onOpenModal = e => {
@@ -139,9 +142,13 @@ class App extends Component {
             onSearchQueryChange={this.handleChange}
             value={query}
           />
-          <ImageGallery images={images} onOpenModal={this.onOpenModal} />
+          <ImageGallery
+            images={images}
+            onOpenModal={this.onOpenModal}
+            searchImages={this.searchImages}
+          />
           <Loader />
-          {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
+          {/* {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />} */}
         </>
       );
     }
@@ -168,7 +175,7 @@ class App extends Component {
             value={query}
           />
           <ImageGallery images={images} onOpenModal={this.onOpenModal} />
-          {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
+          {images.length >= 12 && <Button searchImages={this.searchImages} />}
 
           {showModal && (
             <Modal
