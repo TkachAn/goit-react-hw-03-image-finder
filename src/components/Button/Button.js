@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import css from './Button.module.css';
 
-function Button({ onLoadMore }) {
+function Button({ searchImages }) {
   return (
     <div className={css.button}>
-      <button type={css.btn} className={css.btn} onClick={onLoadMore}>
+      <button type={css.btn} className={css.btn} onClick={searchImages}>
         Load more
       </button>
     </div>
@@ -12,7 +12,7 @@ function Button({ onLoadMore }) {
 }
 
 Button.propTypes = {
-  onLoadMore: PropTypes.func.isRequired,
+  searchImages: PropTypes.func.isRequired,
 };
 
 export default Button;
