@@ -1,5 +1,4 @@
 import { Component } from 'react';
-// import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
@@ -48,12 +47,3 @@ Modal.propTypes = {
 };
 
 export default Modal;
-
-// <div class="overlay">
-//   <div class="modal">
-//     <img src="" alt="" />
-//   </div>
-// </div>;
-///onClick={this.handleBackdropClick}createPortal
-// modalRoot
-// const modalRoot = document.querySelector('#modal-root');
