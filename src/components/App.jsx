@@ -27,9 +27,7 @@ class App extends Component {
     if (prevState.query !== this.state.query) {
       this.setState({ images: [], page: 1, error: null });
     }
-    if (this.status === 'pending') {
-      console.log(this.status); // this.setState({ page: this.state.page + 1 });
-    }
+
   }
 
   searchImages = async () => {
@@ -148,7 +146,6 @@ class App extends Component {
             searchImages={this.searchImages}
           />
           <Loader />
-          {/* {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />} */}
         </>
       );
     }
