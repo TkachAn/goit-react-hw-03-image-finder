@@ -7,6 +7,7 @@ import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
 import ErrorView from './ErrorView/ErrorView';
 import PreLoad from './preLoad/preLoad';
+
 class App extends Component {
   state = {
     query: '',
@@ -23,6 +24,9 @@ class App extends Component {
     if (prevState.query !== this.state.query) {
       this.setState({ images: [], page: 1, error: null });
     }
+    if (prevState.page !== this.state.page) {
+      this.searchImages();
+    }
   }
 
   searchImages = async () => {
@@ -30,11 +34,9 @@ class App extends Component {
     this.setState({ status: 'pending' });
     try {
       const request = await apiPixabay(query, page);
-      // this.onLoadMore();
       this.scrollPage();
       this.setState(({ images }) => ({
         images: [...images, ...request],
-        page: page + 1,
         status: 'resolved',
       }));
       if (request.length === 0 || request === '') {
@@ -78,16 +80,16 @@ class App extends Component {
     this.searchImages();
   };
 
-  // onLoadMore = () => {
-  //   this.setState({ status: 'pending' });
-  //   this.setState(({ page }) => ({
-  //     page: page + 1,
-  //     status: 'resolved',
-  //   }));
+  onLoadMore = () => {
+    this.setState({ status: 'pending' });
+    this.setState(({ page }) => ({
+      page: page + 1,
+      status: 'resolved',
+    }));
 
-  //   console.log(this.state.page);
-  // };
-  // onLoadMore = this.searchImages;
+    console.log(this.state.page);
+  };
+
   onOpenModal = e => {
     this.setState({ largeImageURL: e.target.dataset.source });
     this.toggleModal();
@@ -107,7 +109,7 @@ class App extends Component {
         top: document.documentElement.clientHeight * 5,
         behavior: 'smooth',
       });
-    }, 800);
+    }, 500);
   };
 
   render() {
@@ -174,7 +176,7 @@ class App extends Component {
             value={query}
           />
           <ImageGallery images={images} onOpenModal={this.onOpenModal} />
-          {images.length >= 12 && <Button searchImages={this.searchImages} />}
+          {images.length >= 12 && <Button onLoadMore={this.onLoadMore} />}
 
           {showModal && (
             <Modal
