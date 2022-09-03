@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { compactData } from '../helper/helper';
 
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 const API_KEY = '28325573-e3f151920507aabfaddea723c';
+
 export const apiPixabay = async (query, page) => {
   const { data } = await axios.get('', {
     params: {
@@ -13,7 +15,7 @@ export const apiPixabay = async (query, page) => {
       page: page,
     },
   });
-  return data.hits;
+  return compactData(data.hits);
 };
 
 export const apiPixabayId = async id => {
@@ -23,5 +25,5 @@ export const apiPixabayId = async id => {
       id: id,
     },
   });
-  return data.hits;
+  return compactData(data.hits);
 };
