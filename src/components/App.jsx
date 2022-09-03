@@ -19,15 +19,10 @@ class App extends Component {
     status: 'idle',
   };
 
-  componentDidMount() {
-    this.findImageId('2649311'); //3082831//2649311
-  }
-
   componentDidUpdate(_prevProps, prevState) {
     if (prevState.query !== this.state.query) {
       this.setState({ images: [], page: 1, error: null });
     }
-
   }
 
   searchImages = async () => {
@@ -35,10 +30,11 @@ class App extends Component {
     this.setState({ status: 'pending' });
     try {
       const request = await apiPixabay(query, page);
-      this.onLoadMore();
+      // this.onLoadMore();
       this.scrollPage();
       this.setState(({ images }) => ({
         images: [...images, ...request],
+        page: page + 1,
         status: 'resolved',
       }));
       if (request.length === 0 || request === '') {
@@ -82,12 +78,16 @@ class App extends Component {
     this.searchImages();
   };
 
-  onLoadMore = () => {
-    this.setState(({ page }) => ({
-      page: page + 1,
-    }));
-  };
+  // onLoadMore = () => {
+  //   this.setState({ status: 'pending' });
+  //   this.setState(({ page }) => ({
+  //     page: page + 1,
+  //     status: 'resolved',
+  //   }));
 
+  //   console.log(this.state.page);
+  // };
+  // onLoadMore = this.searchImages;
   onOpenModal = e => {
     this.setState({ largeImageURL: e.target.dataset.source });
     this.toggleModal();
@@ -98,11 +98,13 @@ class App extends Component {
       showModal: !state.showModal,
     }));
   };
-
+  componentDidMount() {
+    this.findImageId('2649311');
+  }
   scrollPage = () => {
     setTimeout(() => {
       window.scrollBy({
-        top: document.documentElement.clientHeight + 560,
+        top: document.documentElement.clientHeight * 5,
         behavior: 'smooth',
       });
     }, 800);
